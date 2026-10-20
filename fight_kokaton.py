@@ -88,7 +88,7 @@ class Beam:
     """
     こうかとんが放つビームに関するクラス
     """
-    def __init__(self, bird:"Bird"):
+    def __init__(self, bird: "Bird"):
         """
         ビーム画像Surfaceを生成する
         引数 bird：ビームを放つこうかとん（Birdインスタンス）
@@ -158,31 +158,27 @@ def main():
                 beam = Beam(bird)            
         screen.blit(bg_img, [0, 0])
         
-        if bird.rct.colliderect(bomb.rct):
-            # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
-            bird.change_img(8, screen)
-            pg.display.update()
-            time.sleep(1)
-            return
-
+        # 1. 爆弾が存在する場合の衝突判定
         if bomb is not None:
+            # こうかとんと爆弾の衝突（ゲームオーバー）
             if bird.rct.colliderect(bomb.rct):
-                # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
                 bird.change_img(8, screen)
                 pg.display.update()
                 time.sleep(1)
                 return
 
-        if bomb is not None:
+            # ビームと爆弾の衝突（練習問題3：喜びエフェクトの実装）
             if beam is not None:
-                if beam.rct.colliderect(bomb.rct):  # ビームと爆弾の衝突判定
+                if beam.rct.colliderect(bomb.rct):
                     beam = None
                     bomb = None
+                    bird.change_img(6, screen)  # 喜ぶこうかとん（6.png）に切り替え
+                    pg.display.update()
 
+        # 2. オブジェクトの更新描画
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
-        beam.update(screen)   
-        bomb.update(screen)
+        
         if beam is not None:
             beam.update(screen)  
         if bomb is not None: 
@@ -197,4 +193,4 @@ if __name__ == "__main__":
     pg.init()
     main()
     pg.quit()
-    sys.exit() 
+    sys.exit()
